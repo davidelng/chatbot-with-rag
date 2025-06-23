@@ -1,0 +1,37 @@
+services:
+    redis:
+        image: redis
+        restart: unless-stopped
+        ports:
+            - '6379:6379'
+
+    opensearch-node:
+        image: opensearchproject/opensearch:latest
+        container_name: opensearch-node
+        environment:
+            - DISABLE_INSTALL_DEMO_CONFIG=true
+            - DISABLE_SECURITY_PLUGIN:true
+            - _JAVA_OPTIONS=-XX:UseSVE=0
+            - plugins.security.disabled=true
+            - cluster.name=opensearch-cluster
+            - node.name=opensearch-node
+            - discovery.seed_hosts=opensearch-node
+            - discovery.type=single-node
+            # - cluster.initial_cluster_manager_nodes=opensearch-node
+            - bootstrap.memory_lock=true
+            # - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+            - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_INITIAL_ADMIN_PASSWORD}
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+            nofile:
+                soft: 65536
+                hard: 65536
+        volumes:
+            - opensearch-data:/usr/share/opensearch/data
+        ports:
+            - 9200:9200
+
+volumes:
+    opensearch-data:

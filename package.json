@@ -1,0 +1,46 @@
+{
+    "private": true,
+    "name": "chatbot",
+    "type": "module",
+    "scripts": {
+        "prepare": "husky",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "pre-commit": "lint-staged",
+        "docker:start": "docker compose -p \"$npm_package_name\" up -d",
+        "docker:stop": "docker compose -p \"$npm_package_name\" stop",
+        "service:pdftovector": "node --env-file=./.env ./src/pdftovector/index.js",
+        "service:replytouser": "node --env-file=./.env ./src/replytouser/index.js",
+        "dev": "node --env-file=./.env ./src/index.js",
+        "test": "vitest run"
+    },
+    "lint-staged": {
+        "*.{js,ts,mjs}": [
+            "prettier --write"
+        ],
+        "*.{json,yml,yaml,md}": [
+            "prettier --write"
+        ]
+    },
+    "dependencies": {
+        "@langchain/community": "^0.3.30",
+        "@langchain/openai": "^0.4.4",
+        "@langchain/redis": "^0.1.1",
+        "@opensearch-project/opensearch": "^3.3.0",
+        "langchain": "^0.3.15",
+        "pdf-parse": "^1.1.1",
+        "redis": "^4.7.0"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.20.0",
+        "eslint": "^9.20.1",
+        "eslint-config-prettier": "^10.0.1",
+        "globals": "^15.15.0",
+        "husky": "^9.1.7",
+        "lint-staged": "^15.4.3",
+        "prettier": "^3.5.1",
+        "vitest": "^3.0.7"
+    }
+}
